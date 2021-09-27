@@ -1,83 +1,50 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "dog.h"
+#include <stdlib.h>
 
 /**
- * len - find length of string
- * @str: string
- * Return: length
+ * _strdup - duplicates a string
+ * @str: the string to duplicate
+ *
+ * Return: pointer to the duplicated string
  */
-int len(char *str)
+char *_strdup(char *str)
 {
-	int i;
+	int length = 0;
+	char *ret;
 
-	for (i = 0; *(str + i); i++)
-		;
-	return (i);
+	if (str == NULL)
+		return (NULL);
+	while (*str++)
+		length++;
+	ret = malloc(sizeof(char) * (length + 1));
+	if (!ret)
+		return (NULL);
+	for (length++; length--;)
+		ret[length] = *--str;
+	return (ret);
 }
-/**
- * strcpy - copies the string pointed to by src,
- * including the terminating null byte (\0),
- * to the buffer pointed to by dest
- * @dest: copy source to this buffer
- * @src: this is the source to copy
- * Return: copy of original source
- */
-char *strcpy(char *dest, char *src)
-{
-	int i;
 
-	for (i = 0; i <= len(src); i++)
-		dest[i] = src[i];
-	return (dest);
-}
+
 /**
- * new_dog - create new instance of struct dog
- * @name: member
- * @age: member
- * @owner: member
- * Return: initialized instance of struct dog
+ * new_dog - instantiates a dawg
+ * @name: the dawgy name
+ * @age: the dawgy age
+ * @owner: the dawgy owner
+ *
+ * Return: pointer to new dawg.
  */
 dog_t *new_dog(char *name, float age, char *owner)
 {
-	dog_t *dog1;
-	char *copy_of_name;
-	char *copy_of_owner;
+	dog_t *d = malloc(sizeof(dog_t));
 
-	dog1 = malloc(sizeof(dog_t)); /* validate if dog1 initiated correctly */
-	if (dog1 == NULL)
+	if (!d)
 		return (NULL);
-
-	dog1->age = age;
-
-	/* make copies of struct members and validate, else free on error */
-	/* set values of struct members to copies of arguments or set to NULL */
-	if (name != NULL)
-	{
-		copy_of_name = malloc(len(name) + 1);
-		if (copy_of_name == NULL)
-		{
-			free(dog1);
-			return (NULL);
-		}
-		dog1->name = strcpy(copy_of_name, name);
-	}
-	else
-		dog1->name = NULL;
-
-	if (owner != NULL)
-	{
-		copy_of_owner = malloc(len(owner) + 1);
-		if (copy_of_owner == NULL)
-		{
-			free(copy_of_name);
-			free(dog1);
-			return (NULL);
-		}
-		dog1->owner = strcpy(copy_of_owner, owner);
-	}
-	else
-		dog1->owner = NULL;
-
-	return (dog1);
+	d->name = _strdup(name);
+	if (name && !d->name)
+		return (free(d), NULL);
+	d->owner = _strdup(owner);
+	if (owner && !d->owner)
+		return (free(d->name), free(d), NULL);
+	d->age = age;
+	return (d);
 }
