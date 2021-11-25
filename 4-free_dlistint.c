@@ -1,20 +1,16 @@
-#include "lists.h"
-
-/**
- * print_dlistint - prints doubly-linked list
- * @h: address of head node
+#tint - frees a dlist
+* @head: pointer to current head node
  *
- * Return: size of list
+* Return: void
  */
-size_t print_dlistint(const dlistint_t *h)
+void free_dlistint(dlistint_t *head)
 {
-	size_t i = 0;
+  dlistint_t *node;
 
-	while (h)
-	{
-		printf("%d\n", h->n);
-		h = h->next;
-		i++;
-	}
-	return (i);
-}
+  while (head)
+    {
+      node = head;
+      head = head->next;
+      free(node);
+    }
+}~
