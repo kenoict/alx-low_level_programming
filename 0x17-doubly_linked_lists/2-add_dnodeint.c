@@ -1,31 +1,36 @@
 #include "lists.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 /**
- * add_dnodeint - adds new head node to dlist
- * @head: address of pointer to current head node
- * @n: int field of new node
- *
- * Return: address of new node or NULL
+ * add_dnodeint - Adds a new node at the beginning of a list_t list.
+ * @head: Head pointer
+ * @n: Data
+ * Return: dlist.
  */
 dlistint_t *add_dnodeint(dlistint_t **head, const int n)
 {
-	dlistint_t *new = malloc(sizeof(dlistint_t));
+	dlistint_t *new_node;
 
-	if (!head || !new)
-		return (new ? free(new), NULL : NULL);
+	if (head == NULL)
+		return (NULL);
 
-	new->n = n;
-	new->prev = NULL;
+	new_node = malloc(sizeof(dlistint_t)); /* 1. allocate node */
+	if (new_node == NULL)
+		return (NULL);
+
+	new_node->n = n; /* put in the data  */
+	new_node->prev = NULL; /* Make prev of new node as NULL */
+
 	if (!*head)
-	{
-		*head = new;
-		new->next = NULL;
+	{	new_node->next =  NULL;
+		*head = new_node;
+		return (new_node);
 	}
-	else
-	{
-		new->next = *head;
-		(*head)->prev = new;
-		*head = new;
-	}
-	return (new);
+
+	new_node->next = *head; /* Point next of new node to old head */
+	(*head)->prev = new_node; /* change prev of head node to new node */
+	*head = new_node; /* move the head to point to the new node */
+	return (new_node);
 }
